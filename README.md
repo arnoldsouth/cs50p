@@ -1,0 +1,2 @@
+CS50 IDE Github Personal Access Token:
+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
