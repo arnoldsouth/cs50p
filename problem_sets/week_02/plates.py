@@ -45,3 +45,27 @@ def is_valid(s):
 
 
 main()
+
+
+# def is_valid(s):
+#     # Check the length of the vanity plate
+#     if len(s) < 2 or len(s) > 6:
+#         return False
+#     # Check if the first two characters are letters
+#     if not s[0:2].isalpha():
+#         return False
+#     # Check if any characters after the first two are not digits,
+#     # or if any characters are not alphanumeric
+#     has_digit = False
+#     for ch in s[2:]:
+#         if not ch.isalnum():
+#             return False
+#         if ch.isdigit():
+#             has_digit = True
+#         elif has_digit:
+#             # If a letter is found after a digit, it's invalid
+#             return False
+#     # Check if the first digit is 0
+#     if len(s) > 2 and s[2] == '0':
+#         return False
+#     return True
