@@ -1,14 +1,16 @@
 def main():
-    greeting = input("Greeting: ").strip().lower()
+    greeting = input("Greeting: ")
     result = value(greeting)
 
     print(f"${result}")
 
 
 def value(greeting):
-    if greeting.startswith("hello"):
+    greeting_stripped_lowercase = greeting.strip().lower()
+
+    if greeting_stripped_lowercase.startswith("hello"):
         return 0
-    elif greeting.startswith("h"):
+    elif greeting_stripped_lowercase.startswith("h"):
         return 20
     else:
         return 100
