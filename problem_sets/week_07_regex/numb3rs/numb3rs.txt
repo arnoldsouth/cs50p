@@ -1,0 +1,17 @@
+Explanation:
+
+The code uses Python's built-in re module to work with regular expressions.
+
+The main() function is the entry point of the program. It prompts the user to enter an IPv4 address and then calls the validate() function with the provided input.
+
+The validate(ip) function takes an IPv4 address as input and attempts to validate it using a regular expression.
+
+The regular expression pattern pattern matches each segment of the IPv4 address (0-255) in a non-capturing group. The expression covers numbers from 0 to 255, taking into account optional leading zeros.
+
+The re.search() function is used to match the entire input IPv4 address against the regular expression pattern. If there's a match, it means the address is in the correct format.
+
+If the regular expression matches, the validate() function returns True, indicating that the IPv4 address is valid. Otherwise, it returns False.
+
+The main() function calls validate() and prints the result of the validation, i.e., whether the IPv4 address is valid or not.
+
+Note: While this code checks the format of the IPv4 address, it does not verify whether the IP is assigned to any specific device or if it's reachable on a network. It's merely a basic format validation.
