@@ -1,4 +1,4 @@
-# https://cs50.harvard.edu/python/2022/notes/9/#enumerate
+# https://cs50.harvard.edu/python/2022/notes/9/#generators-and-iterators
 
 # def main():
 #     n = int(input("What's n? "))
