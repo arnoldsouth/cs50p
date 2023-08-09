@@ -164,3 +164,14 @@ for match_id in recent_matches:
     win = did_win(summoner_puuid, match_data)
 
     print(win)
+
+
+# https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/JqYjY_hjOLj8Kzy7k7ZcgI-67LtIZWQTnEEKHzgi-vkJZ2ti_CQm-HkaQmT9BiQOKwJqhyISihvbuQ/ids?start=0&count=20
+def get_matches():
+    api_url = (
+        "https://"
+        + region
+        + ".api.riotgames.com/lol/match/v5/matches/by-puuid/"
+        + puuid
+        + "/ids?start=0&count=20"
+    )
