@@ -1,4 +1,4 @@
-import requests, time
+import requests
 
 
 API_KEY = "RGAPI-f6f05fcd-1cd2-479d-a140-edd0aebbc8c9"
@@ -28,7 +28,8 @@ def main():
 
 
 def get_username():
-    username_inp = input("Enter username: ").strip()
+    username_inp = input("Enter username: ").strip().lower().replace(" ", "%20")
+
     return username_inp
 
 
