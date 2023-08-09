@@ -2,96 +2,118 @@ import requests
 
 
 API_KEY = "RGAPI-f6f05fcd-1cd2-479d-a140-edd0aebbc8c9"
+SUMMONER_DATA_API_URL = (
+    "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{}?api_key={}"
+)
+MATCH_LIST_API_URL = "https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?start=0&count=20&api_key={}"
+MATCH_DATA_API_URL = (
+    "https://americas.api.riotgames.com/lol/match/v5/matches/{}?api_key={}"
+)
 
 
 def main():
-    username = get_username()
+    try:
+        username = get_username()
+        puuid = get_puuid(username)
+        match_id_list = get_match_id_list(puuid)
 
-    puuid = get_puuid(username)
-    summoner_data = get_summoner_data(username)
+        print(f"Recent Match History for {username}")
+        print("")
 
-    name = summoner_data["name"]
+        for match_id in match_id_list:
+            print_match_data(match_id)
 
-    match_id_list = get_match_id_list(puuid)
-    match_history = get_match_history(match_id_list, puuid)
-
-    print(f"Match History for: {name}")
-
-    for match_id, match_data in match_history.items():
-        if match_data:
-            role, championName, kills, deaths, assists = match_data
-            print(
-                f"Match ID: {match_id} / Kills: {kills}, Deaths: {deaths}, Assists: {assists} / {role}, {championName}"
-            )
-        else:
-            print(f"Match ID: {match_id}. No match data available.")
+    except requests.RequestException:
+        print(f"Username not found. Please try again.")
 
 
+# get input from user
 def get_username():
     username_inp = input("Enter username: ").strip().lower().replace(" ", "%20")
+    print("")
 
     return username_inp
 
 
-def get_puuid(username):
-    api_url = f"https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{username}?api_key={API_KEY}"
-
+# helper function
+def get_data_from_api_url(api_url):
     response = requests.get(api_url)
-    data = response.json()
+    response.raise_for_status()
+    # response.raise_for_status().json()
+    api_data = response.json()
+
+    return api_data
+
+
+# get summoner's puuid
+def get_puuid(username):
+    data = get_data_from_api_url(SUMMONER_DATA_API_URL.format(username, API_KEY))
     puuid = data["puuid"]
 
     return puuid
 
 
 def get_match_id_list(puuid):
-    api_url = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=20&api_key={API_KEY}"
-
-    response = requests.get(api_url)
-    data = response.json()
+    data = get_data_from_api_url(MATCH_LIST_API_URL.format(puuid, API_KEY))
     match_id_list = data
 
     return match_id_list
 
 
-def get_match_history(match_id_list, puuid):
-    match_history = {}
-
-    for match_id in match_id_list:
-        match_data = get_match_data(match_id, puuid)
-        match_history[match_id] = match_data
-
-    return match_history
-
-
-def get_match_data(match_id, puuid):
-    api_url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={API_KEY}"
-
-    response = requests.get(api_url)
-    data = response.json()
-
+def get_match_data(match_id):
+    data = get_data_from_api_url(MATCH_DATA_API_URL.format(match_id, API_KEY))
     participants = data["info"]["participants"]
 
+    participants_stats = []
+
     for participant in participants:
-        if participant["puuid"] == puuid:
-            role = participant["role"].capitalize()
-            championName = participant["championName"]
-            kills = participant["kills"]
-            deaths = participant["deaths"]
-            assists = participant["assists"]
+        stats = (
+            participant["teamId"],
+            participant["win"],
+            participant["summonerLevel"],
+            participant["summonerName"],
+            participant["role"].capitalize(),
+            participant["championName"],
+            participant["kills"],
+            participant["deaths"],
+            participant["assists"],
+        )
+        participants_stats.append(stats)
 
-            return role, championName, kills, deaths, assists
-
-    return None
+    return participants_stats
 
 
-def get_summoner_data(username):
-    api_url = f"https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{username}?api_key={API_KEY}"
+def print_match_data(match_id):
+    participants_stats = get_match_data(match_id)
 
-    response = requests.get(api_url)
-    data = response.json()
-    summoner_data = data
+    print(f"Match ID: {match_id}")
 
-    return summoner_data
+    print(
+        f"{'Team':<20} {'Win':<20} {'Summoner Level':<20} {'Summoner Name':<20} {'Role':<20} {'Champion Name':<20} {'Kills':<20} {'Deaths':<20} {'Assists':<20}"
+    )
+
+    print("➖" * 95)
+
+    for stats in participants_stats:
+        (
+            teamId,
+            win,
+            summonerLevel,
+            summonerName,
+            role,
+            championName,
+            kills,
+            deaths,
+            assists,
+        ) = stats
+
+        print(
+            f"{teamId:<20} {win:<20} {summonerLevel:<20} {summonerName:<20} {role:<20} {championName:<20} {kills:<20} {deaths:<20} {assists:<20}"
+        )
+
+    print("➖" * 95)
+    print("")
+    print("")
 
 
 if __name__ == "__main__":
