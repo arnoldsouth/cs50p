@@ -1,4 +1,4 @@
-import requests
+import requests, time
 
 api_key = "RGAPI-f6f05fcd-1cd2-479d-a140-edd0aebbc8c9"
 
@@ -133,11 +133,19 @@ def get_match_data(region, match_id, api_key):
         + "?api_key="
         + api_key
     )
-    response = requests.get(api_url)
-    data = response.json()
-    # print(data)
 
-    return data
+    while True:
+        response = requests.get(api_url)
+
+        if response.status_code == 429:
+            print("Sleep...")
+            time.sleep(10)
+            continue
+
+        data = response.json()
+        # print(data)
+
+        return data
 
 
 def did_win(summoner_puuid, match_data):
@@ -158,20 +166,39 @@ region = "americas"
 # win = did_win(summoner_puuid, match_data)
 # print(win)
 
+game_no = 1
 
 for match_id in recent_matches:
+    print(game_no)
+    print(match_id)
+
     match_data = get_match_data(region, match_id, api_key)
     win = did_win(summoner_puuid, match_data)
 
     print(win)
+    print("")
+
+    game_no += 1
 
 
 # https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/JqYjY_hjOLj8Kzy7k7ZcgI-67LtIZWQTnEEKHzgi-vkJZ2ti_CQm-HkaQmT9BiQOKwJqhyISihvbuQ/ids?start=0&count=20
-def get_matches():
+def get_matches(region, summoner_puuid, count, api_key):
     api_url = (
         "https://"
         + region
         + ".api.riotgames.com/lol/match/v5/matches/by-puuid/"
-        + puuid
-        + "/ids?start=0&count=20"
+        + summoner_puuid
+        + "/ids"
+        + "?type=ranked&"
+        + "start=0&"
+        + "count="
+        + str(count)
+        + "&api_key="
+        + api_key
     )
+
+    response = requests.get(api_url)
+    return response.json()
+
+
+matches = get_matches(region, summoner_puuid, 10, api_key)
