@@ -34,9 +34,9 @@ If a username is not found, the script will notify the user and gracefully exit.
 
 ### Modules and Functions:
 
-**get_username()**: Fetches and processes the username from user input.
-**get_data_from_api_url(api_url)**: Utility function to retrieve JSON data from a provided API URL.
-**get_puuid(username)**: Fetches the puuid for the given username.
-**get_match_id_list(puuid)**: Fetches the list of recent match IDs for the provided puuid.
-**get_match_data(match_id)**: Retrieves detailed data for a specific match.
-**print_match_data(match_id)**: Prints the detailed data of a given match.
+-   **get_username()**: Fetches and processes the username from user input.
+-   **get_data_from_api_url(api_url)**: Utility function to retrieve JSON data from a provided API URL.
+-   **get_puuid(username)**: Fetches the puuid for the given username.
+-   **get_match_id_list(puuid)**: Fetches the list of recent match IDs for the provided puuid.
+-   **get_match_data(match_id)**: Retrieves detailed data for a specific match.
+-   **print_match_data(match_id)**: Prints the detailed data of a given match.
