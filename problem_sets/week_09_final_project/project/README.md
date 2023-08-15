@@ -1,10 +1,8 @@
-# YOUR PROJECT TITLE
+# LEAGUE OF LEGENDS MATCH HISTORY VIEWER
 
 #### Video Demo: <URL HERE>
 
 #### Description:
-
-## League of Legends Match History Viewer
 
 This script fetches and displays the recent match history of a given Summoner's username from the official Riot Games' API.
 
